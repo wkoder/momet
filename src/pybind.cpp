@@ -6,14 +6,16 @@
  */
 
 #include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+#include <boost/python/suite/indexing/indexing_suite.hpp>
 
 #include "momet.h"
 
 using namespace boost::python;
+using namespace std;
 
 BOOST_PYTHON_MODULE(momet)
 {
-    // Create the Python type object for our extension class and define __init__ function.
     class_<Momet>("Momet")
         .def("errorRatio", &Momet::errorRatio)
         .def("generationalDistance", &Momet::genDistance)
@@ -22,4 +24,9 @@ BOOST_PYTHON_MODULE(momet)
         .def("additiveEpsilon", &Momet::addEpsilonIndicator)
         .def("multiplicativeEpsilon", &Momet::multEpsilonIndicator)
     ;
+    
+    class_<vector<double> >("dList")
+            .def(vector_indexing_suite<vector<double> >());
+    class_<vector<vector<double> > >("ddList")
+                .def(vector_indexing_suite<vector<vector<double> > >());
 }

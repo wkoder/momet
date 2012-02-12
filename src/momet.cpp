@@ -52,7 +52,7 @@ vector<double> Momet::nadirPoint(vector<vector<double> >& PFknown) {
 	return nadirEstimate;
 }
 
-double Momet::errorRatio(vector<vector<double> >& PFknown, vector<vector<double> >& PFtrue) {
+double Momet::errorRatio(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
 	double errors = 0.0;
 	bool dominated = false;
 	int PFKnownSize = PFknown.size();
@@ -71,7 +71,7 @@ double Momet::errorRatio(vector<vector<double> >& PFknown, vector<vector<double>
 	return errors / PFKnownSize;
 }
 
-double Momet::genDistance(vector<vector<double> >& PFknown, vector<vector<double> >& PFtrue) {
+double Momet::genDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
 	double sum = 0.0, p = 2;
 	int PFKnownSize = PFknown.size();
 	int PFTrueSize = PFtrue.size();
@@ -146,7 +146,7 @@ double Momet::gValueDTLZ(vector<vector<double> >& ParetoSetApprox, int K_distVar
 	return gValueTotal / ((double) PSSize);
 }
 
-double Momet::spacing(vector<vector<double> >& PFKnown) {
+double Momet::spacing(vector<vector<double> > PFKnown) {
 	double mean = 0.0;
 	double sum = 0.0;
 	int PFKnownSize = PFKnown.size();
@@ -164,7 +164,7 @@ double Momet::spacing(vector<vector<double> >& PFKnown) {
 	return sqrt(sum / (PFKnownSize - 1));
 }
 
-double Momet::coverage(vector<vector<double> >& a, vector<vector<double> >& b) {
+double Momet::coverage(vector<vector<double> > a, vector<vector<double> > b) {
 	double ndominatedOfB = 0;
 	for (unsigned int i = 0; i < b.size(); i++) {
 		bool isDominated = false;
@@ -180,7 +180,7 @@ double Momet::coverage(vector<vector<double> >& a, vector<vector<double> >& b) {
 	return ndominatedOfB / (double) b.size();
 }
 
-double Momet::addEpsilonIndicator(vector<vector<double> >& a, vector<vector<double> >& b) {
+double Momet::addEpsilonIndicator(vector<vector<double> > a, vector<vector<double> > b) {
 	int nObjs = a[0].size();
 	double distance, maxDist, minDist;
 
@@ -226,7 +226,7 @@ double Momet::addEpsilonIndicator(vector<vector<double> >& a, vector<vector<doub
 	return maxDist;
 }
 
-double Momet::multEpsilonIndicator(vector<vector<double> >& a, vector<vector<double> >& b) {
+double Momet::multEpsilonIndicator(vector<vector<double> > a, vector<vector<double> > b) {
 	int nObjs = a[0].size();
 	double distance, maxDist, minDist;
 
