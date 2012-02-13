@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -O0 -g -Wall -fmessage-length=0 -I/usr/include/python2.7 -fPIC
+CXXFLAGS = -O3 -g -Wall -fmessage-length=0 -I/usr/include/python2.7 -fPIC
 #CXXFLAGS = -g -Wall -fmessage-length=0
 SRC = src/
 BIN = bin/
