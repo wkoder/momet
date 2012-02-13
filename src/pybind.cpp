@@ -23,6 +23,7 @@ BOOST_PYTHON_MODULE(momet)
         .def("coverage", &Momet::coverage)
         .def("additiveEpsilon", &Momet::addEpsilonIndicator)
         .def("multiplicativeEpsilon", &Momet::multEpsilonIndicator)
+        .def("hypervolume", &Momet::hypervolume)
     ;
     
     class_<vector<double> >("dList")

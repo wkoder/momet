@@ -27,6 +27,7 @@ public:
 	double coverage(vector<vector<double> > a, vector<vector<double> > b);
 	double addEpsilonIndicator(vector<vector<double> > a, vector<vector<double> > b);
 	double multEpsilonIndicator(vector<vector<double> > a, vector<vector<double> > b);
+	double hypervolume(vector<vector<double> > PFKnown, vector<double> reference);
 
 	double bestAchievement(vector<vector<double> >& PFknown, int &pos, vector<double> zref, vector<double> weights);
 	double gDistanceSphere(vector<vector<double> >& PFknown);
@@ -39,7 +40,7 @@ private:
 	double nearestNeighborDistance(vector<vector<double> >& PFKnown, int i);
 	double euclideanDistance(vector<double>& x, vector<double>& y);
 	double chebyAchievement(vector<double> x, vector<double> zref, vector<double> weights);
-	
+	vector<vector<double> > removeDominated(vector<vector<double> > x);
 };
 
 #endif /* MOMET_H_ */

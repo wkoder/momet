@@ -1,10 +1,11 @@
 CXX = g++
-CXXFLAGS = -O3 -g -Wall -fmessage-length=0 -I/usr/include/python2.7 -fPIC
+CXXFLAGS = -O0 -g -Wall -fmessage-length=0 -I/usr/include/python2.7 -fPIC
 #CXXFLAGS = -g -Wall -fmessage-length=0
 SRC = src/
 BIN = bin/
 VPATH = $(SRC):
-OBJS = $(patsubst $(SRC)%.cpp, $(BIN)%.o, $(wildcard $(SRC)*.cpp))
+OBJS = $(patsubst $(SRC)%.cpp, $(BIN)%.o, $(wildcard $(SRC)*.cpp)) \
+		$(patsubst $(SRC)%.c, $(BIN)%.o, $(wildcard $(SRC)*.c))
 DEPS = $(OBJS)
 EXE = momet.so
 

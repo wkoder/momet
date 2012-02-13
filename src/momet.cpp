@@ -4,8 +4,10 @@
 #include <stdio.h>
 
 #include "momet.h"
+#include "hv.h"
 
 #define INF 1e40
+#define EPS 1e-6
 
 Momet::Momet() {
 	
@@ -13,6 +15,28 @@ Momet::Momet() {
 
 Momet::~Momet() {
 	
+}
+
+double Momet::hypervolume(vector<vector<double> > PFKnown, vector<double> reference) {
+	PFKnown = removeDominated(PFKnown);
+	
+	int n = PFKnown.size();
+	int d = PFKnown[0].size();
+	
+	double *ref = new double[d];
+	double *data = new double[n * d];
+	for (int i = 0; i < d; i++)
+		ref[i] = reference[i];
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < d; j++)
+			data[i * d + j] = PFKnown[i][j];
+	
+	double hv = fpli_hv(data, d, n, ref);
+
+	delete [] data;
+	delete [] ref;
+	
+	return hv;
 }
 
 double Momet::bestAchievement(vector<vector<double> >& PFknown, int &pos, vector<double> zref, vector<double> weights) {
@@ -53,6 +77,9 @@ vector<double> Momet::nadirPoint(vector<vector<double> >& PFknown) {
 }
 
 double Momet::errorRatio(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	PFknown = removeDominated(PFknown);
+	PFtrue = removeDominated(PFtrue);
+	
 	double errors = 0.0;
 	bool dominated = false;
 	int PFKnownSize = PFknown.size();
@@ -72,6 +99,9 @@ double Momet::errorRatio(vector<vector<double> > PFknown, vector<vector<double> 
 }
 
 double Momet::genDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	PFknown = removeDominated(PFknown);
+	PFtrue = removeDominated(PFtrue);
+	
 	double sum = 0.0, p = 2;
 	int PFKnownSize = PFknown.size();
 	int PFTrueSize = PFtrue.size();
@@ -147,6 +177,8 @@ double Momet::gValueDTLZ(vector<vector<double> >& ParetoSetApprox, int K_distVar
 }
 
 double Momet::spacing(vector<vector<double> > PFKnown) {
+	PFKnown = removeDominated(PFKnown);
+	
 	double mean = 0.0;
 	double sum = 0.0;
 	int PFKnownSize = PFKnown.size();
@@ -165,6 +197,9 @@ double Momet::spacing(vector<vector<double> > PFKnown) {
 }
 
 double Momet::coverage(vector<vector<double> > a, vector<vector<double> > b) {
+	a = removeDominated(a);
+	b = removeDominated(b);
+	
 	double ndominatedOfB = 0;
 	for (unsigned int i = 0; i < b.size(); i++) {
 		bool isDominated = false;
@@ -181,6 +216,9 @@ double Momet::coverage(vector<vector<double> > a, vector<vector<double> > b) {
 }
 
 double Momet::addEpsilonIndicator(vector<vector<double> > a, vector<vector<double> > b) {
+	a = removeDominated(a);
+	b = removeDominated(b);
+	
 	int nObjs = a[0].size();
 	double distance, maxDist, minDist;
 
@@ -227,8 +265,21 @@ double Momet::addEpsilonIndicator(vector<vector<double> > a, vector<vector<doubl
 }
 
 double Momet::multEpsilonIndicator(vector<vector<double> > a, vector<vector<double> > b) {
+	a = removeDominated(a);
+	b = removeDominated(b);
+	
 	int nObjs = a[0].size();
 	double distance, maxDist, minDist;
+	double delta = 0;
+	
+	for (unsigned int i = 0; i < a.size(); i++) // To ensure we have positive values
+		for (int j = 0; j < nObjs; j++)
+			if (a[i][j] < EPS)
+				delta = max(delta, fabs(a[i][j]) + EPS);
+	for (unsigned int i = 0; i < b.size(); i++) // To ensure we have positive values
+		for (int j = 0; j < nObjs; j++)
+			if (b[i][j] < EPS)
+				delta = max(delta, fabs(b[i][j]) + EPS);
 
 	// Create an |a|x|b| matrix with the distances from points in A (rows) to points in B (cols).
 	vector < vector<double> > distMatrix(a.size());
@@ -239,9 +290,9 @@ double Momet::multEpsilonIndicator(vector<vector<double> > a, vector<vector<doub
 	for (unsigned int i = 0; i < a.size(); ++i) {
 		for (unsigned int j = 0; j < b.size(); ++j) {
 			// Find the maximum difference among objectives for all points i in A & j in B.
-			maxDist = a[i][0] / b[j][0];
+			maxDist = (a[i][0] + delta) / (b[j][0] + delta);
 			for (int k = 1; k < nObjs; ++k) {
-				distance = a[i][k] / b[j][k];
+				distance = (a[i][k] + delta) / (b[j][k] + delta);
 				if (maxDist < distance)
 					maxDist = distance;
 			}
@@ -327,4 +378,21 @@ bool Momet::weaklyDominates(vector<double>& x, vector<double>& y) {
 			return false;
 
 	return true;
+}
+
+vector<vector<double> > Momet::removeDominated(vector<vector<double> > x) {
+	vector<vector<double> > nd;
+	for (unsigned int i = 0; i < x.size(); i++) {
+		bool isNd = true;
+		for (unsigned int j = i+1; j < x.size(); j++)
+			if (weaklyDominates(x[j], x[i])) {
+				isNd = false;
+				break;
+			}
+		
+		if (isNd)
+			nd.push_back(x[i]);
+	}
+		
+	return nd;
 }
