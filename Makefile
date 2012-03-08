@@ -1,6 +1,6 @@
 CXX = g++
-CXXFLAGS = -O3 -g -Wall -fmessage-length=0 -I/usr/include/python2.7 -fPIC
-#CXXFLAGS = -g -Wall -fmessage-length=0
+PYTHON_VER = 2.7
+CXXFLAGS = -O3 -g -Wall -fmessage-length=0 -I/usr/include/python$(PYTHON_VER) -fPIC
 SRC = src/
 BIN = bin/
 VPATH = $(SRC):
@@ -17,7 +17,7 @@ $(BIN)%.o: %.cpp
 $(BIN)%.o: %.c
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 $(EXE): init $(DEPS)
-	$(CXX) $(CXXFLAGS) -shared -Wl,--export-dynamic -lboost_python $(OBJS) -o $(BIN)$(EXE)
+	$(CXX) $(CXXFLAGS) -shared -Wl,--export-dynamic -lboost_python -lpython$(PYTHON_VER) $(OBJS) -o $(BIN)$(EXE)
 	
 all:	clean $(EXE)
 
