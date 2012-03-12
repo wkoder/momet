@@ -17,7 +17,7 @@ $(BIN)%.o: %.cpp
 $(BIN)%.o: %.c
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 $(EXE): init $(DEPS)
-	$(CXX) $(CXXFLAGS) -shared -Wl,--export-dynamic -lboost_python -lpython$(PYTHON_VER) $(OBJS) -o $(BIN)$(EXE)
+	$(CXX) $(CXXFLAGS) -shared -Wl,-soname,$(BIN)$(EXE) -o $(BIN)$(EXE) $(OBJS) -lpython$(PYTHON_VER) -lboost_python
 	
 all:	clean $(EXE)
 
