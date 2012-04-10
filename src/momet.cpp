@@ -78,7 +78,6 @@ vector<double> Momet::nadirPoint(vector<vector<double> >& PFknown) {
 
 double Momet::errorRatio(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
 	PFknown = removeDominated(PFknown);
-	PFtrue = removeDominated(PFtrue);
 	
 	double errors = 0.0;
 	bool dominated = false;
@@ -96,29 +95,6 @@ double Momet::errorRatio(vector<vector<double> > PFknown, vector<vector<double> 
 	}
 
 	return errors / PFKnownSize;
-}
-
-double Momet::genDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
-	PFknown = removeDominated(PFknown);
-	PFtrue = removeDominated(PFtrue);
-	
-	double sum = 0.0, p = 2;
-	int PFKnownSize = PFknown.size();
-	int PFTrueSize = PFtrue.size();
-
-	for (int i = 0; i < PFKnownSize; ++i) {
-		double minDistance = euclideanDistance(PFknown[i], PFtrue[0]);
-		for (int j = 1; j < PFTrueSize; ++j) {
-			double distance = euclideanDistance(PFknown[i], PFtrue[j]);
-
-			if (distance < minDistance)
-				minDistance = distance;
-		}
-
-		sum += pow(minDistance, p);
-	}
-
-	return pow(sum, 1.0 / p) / PFKnownSize;
 }
 
 double Momet::gDistanceSphere(vector<vector<double> >& PFknown) {
@@ -395,4 +371,67 @@ vector<vector<double> > Momet::removeDominated(vector<vector<double> > x) {
 	}
 		
 	return nd;
+}
+
+double Momet::nearestDistance(vector<double>& ind, vector<vector<double> >& PFKnown) {
+	double minDistance = euclideanDistance(ind, PFKnown[0]);
+	for (unsigned int j = 1; j < PFKnown.size(); ++j) {
+		double distance = euclideanDistance(ind, PFKnown[j]);
+		if (distance < minDistance)
+			minDistance = distance;
+	}
+
+	return minDistance;
+}
+
+double Momet::genDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	PFknown = removeDominated(PFknown);
+	
+	double sum = 0.0, p = 2;
+	int PFKnownSize = PFknown.size();
+
+	for (int i = 0; i < PFKnownSize; ++i) {
+		double minDistance = nearestDistance(PFknown[i], PFtrue);
+		sum += pow(minDistance, p);
+	}
+
+	return pow(sum, 1.0 / p) / PFKnownSize;
+}
+
+double Momet::genDistanceAlt(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	PFknown = removeDominated(PFknown);
+	
+	double sum = 0.0, p = 2;
+	int PFKnownSize = PFknown.size();
+
+	for (int i = 0; i < PFKnownSize; ++i) {
+		double minDistance = nearestDistance(PFknown[i], PFtrue);
+		sum += pow(minDistance, p);
+	}
+	
+	return pow(sum / PFKnownSize, 1.0 / p);
+}
+
+double Momet::invertedGenDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	double sum = 0.0, p = 2;
+	int PFTrueSize = PFtrue.size();
+
+	for (int i = 0; i < PFTrueSize; ++i) {
+		double minDistance = nearestDistance(PFtrue[i], PFknown);
+		sum += pow(minDistance, p);
+	}
+
+	return pow(sum, 1.0 / p) / PFTrueSize;
+}
+
+double Momet::invertedGenDistanceAlt(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	double sum = 0.0, p = 2;
+	int PFTrueSize = PFtrue.size();
+
+	for (int i = 0; i < PFTrueSize; ++i) {
+		double minDistance = nearestDistance(PFtrue[i], PFknown);
+		sum += pow(minDistance, p);
+	}
+
+	return pow(sum / PFTrueSize, 1.0 / p);
 }

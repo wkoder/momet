@@ -18,12 +18,15 @@ BOOST_PYTHON_MODULE(momet)
 {
     class_<Momet>("Momet")
         .def("errorRatio", &Momet::errorRatio)
-        .def("generationalDistance", &Momet::genDistance)
         .def("spacing", &Momet::spacing)
         .def("coverage", &Momet::coverage)
         .def("additiveEpsilon", &Momet::addEpsilonIndicator)
         .def("multiplicativeEpsilon", &Momet::multEpsilonIndicator)
         .def("hypervolume", &Momet::hypervolume)
+        .def("generationalDistance", &Momet::genDistance)
+        .def("generationalDistanceAlt", &Momet::genDistanceAlt)
+        .def("invertedGenerationalDistance", &Momet::invertedGenDistance)
+        .def("invertedGenerationalDistanceAlt", &Momet::invertedGenDistanceAlt)
     ;
     
     class_<vector<double> >("dList")
