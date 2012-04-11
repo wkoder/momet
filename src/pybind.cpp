@@ -24,9 +24,10 @@ BOOST_PYTHON_MODULE(momet)
         .def("multiplicativeEpsilon", &Momet::multEpsilonIndicator)
         .def("hypervolume", &Momet::hypervolume)
         .def("generationalDistance", &Momet::genDistance)
-        .def("generationalDistanceAlt", &Momet::genDistanceAlt)
+        .def("generationalDistanceP", &Momet::genDistanceP)
         .def("invertedGenerationalDistance", &Momet::invertedGenDistance)
-        .def("invertedGenerationalDistanceAlt", &Momet::invertedGenDistanceAlt)
+        .def("invertedGenerationalDistanceP", &Momet::invertedGenDistanceP)
+        .def("deltaP", &Momet::deltaP)
     ;
     
     class_<vector<double> >("dList")

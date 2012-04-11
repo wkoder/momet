@@ -398,7 +398,7 @@ double Momet::genDistance(vector<vector<double> > PFknown, vector<vector<double>
 	return pow(sum, 1.0 / p) / PFKnownSize;
 }
 
-double Momet::genDistanceAlt(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+double Momet::genDistanceP(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
 	PFknown = removeDominated(PFknown);
 	
 	double sum = 0.0, p = 2;
@@ -413,6 +413,8 @@ double Momet::genDistanceAlt(vector<vector<double> > PFknown, vector<vector<doub
 }
 
 double Momet::invertedGenDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	PFknown = removeDominated(PFknown);
+	
 	double sum = 0.0, p = 2;
 	int PFTrueSize = PFtrue.size();
 
@@ -424,7 +426,9 @@ double Momet::invertedGenDistance(vector<vector<double> > PFknown, vector<vector
 	return pow(sum, 1.0 / p) / PFTrueSize;
 }
 
-double Momet::invertedGenDistanceAlt(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+double Momet::invertedGenDistanceP(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	PFknown = removeDominated(PFknown);
+	
 	double sum = 0.0, p = 2;
 	int PFTrueSize = PFtrue.size();
 
@@ -434,4 +438,8 @@ double Momet::invertedGenDistanceAlt(vector<vector<double> > PFknown, vector<vec
 	}
 
 	return pow(sum / PFTrueSize, 1.0 / p);
+}
+
+double Momet::deltaP(vector<vector<double> > PFknown, vector<vector<double> > PFtrue) {
+	return max(genDistanceP(PFknown, PFtrue), invertedGenDistanceP(PFknown, PFtrue));
 }

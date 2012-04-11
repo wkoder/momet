@@ -28,8 +28,9 @@ public:
 
 	double genDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
 	double invertedGenDistance(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
-	double genDistanceAlt(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
-	double invertedGenDistanceAlt(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
+	double genDistanceP(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
+	double invertedGenDistanceP(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
+	double deltaP(vector<vector<double> > PFknown, vector<vector<double> > PFtrue);
 
 	vector<double> nadirPoint(vector<vector<double> >& PFknown);
 	double bestAchievement(vector<vector<double> >& PFknown, int &pos, vector<double> zref, vector<double> weights);
